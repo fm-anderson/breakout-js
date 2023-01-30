@@ -1,5 +1,5 @@
-const canvas = document.querySelector('.canvas');
-const context = canvas.getContext('2d');
+const canvas = document.querySelector('#canvas');
+const ctx = canvas.getContext('2d');
 const caption = document.querySelector('.caption');
 
 // ball
@@ -21,7 +21,7 @@ const brickRowCount = 3;
 const brickColumnCount = 5;
 const brickWidth = 75;
 const brickHeight = 20;
-const brickPadding = 10;
+const brickPadding = 8;
 const brickOffsetTop = 30;
 const brickOffsetLeft = 30;
 const bricks = [];
@@ -37,24 +37,19 @@ let score = 0;
 let lives = 3;
 
 function drawBall() {
-  context.beginPath();
-  context.arc(x, y, ballRadius, 0, Math.PI * 2);
-  context.fillStyle = '#2dd4bf';
-  context.fill();
-  context.closePath();
+  ctx.beginPath();
+  ctx.arc(x, y, ballRadius, 0, Math.PI * 2);
+  ctx.fillStyle = '#2dd4bf';
+  ctx.fill();
+  ctx.closePath();
 }
 
 function drawPaddle() {
-  context.beginPath();
-  context.rect(
-    paddleX,
-    canvas.height - paddleHeight,
-    paddleWidth,
-    paddleHeight
-  );
-  context.fillStyle = '#2dd4bf';
-  context.fill();
-  context.closePath();
+  ctx.beginPath();
+  ctx.rect(paddleX, canvas.height - paddleHeight, paddleWidth, paddleHeight);
+  ctx.fillStyle = '#2dd4bf';
+  ctx.fill();
+  ctx.closePath();
 }
 
 function drawBricks() {
@@ -65,18 +60,18 @@ function drawBricks() {
         const brickY = r * (brickHeight + brickPadding) + brickOffsetTop;
         bricks[c][r].x = brickX;
         bricks[c][r].y = brickY;
-        context.beginPath();
-        context.rect(brickX, brickY, brickWidth, brickHeight);
-        context.fillStyle = '#2dd4bf';
-        context.fill();
-        context.closePath();
+        ctx.beginPath();
+        ctx.rect(brickX, brickY, brickWidth, brickHeight);
+        ctx.fillStyle = '#2dd4bf';
+        ctx.fill();
+        ctx.closePath();
       }
     }
   }
 }
 
 function draw() {
-  context.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
   drawBricks();
   drawBall();
   drawPaddle();
@@ -96,9 +91,7 @@ function draw() {
     } else {
       lives--;
       if (!lives) {
-        // alert('GAME OVER');
         caption.textContent = 'GAME OVER';
-        // document.location.reload();
       } else {
         x = canvas.width / 2;
         y = canvas.height - 30;
@@ -114,7 +107,8 @@ function draw() {
   } else if (leftPressed) {
     paddleX = Math.max(paddleX - 7, 0);
   }
-  if (lives >= 0) {
+  if (lives >= 0 && score !== brickRowCount * brickColumnCount) {
+    collisionDetection();
     requestAnimationFrame(draw);
   }
 }
@@ -162,8 +156,6 @@ function collisionDetection() {
           score++;
           if (score === brickRowCount * brickColumnCount) {
             caption.textContent = 'CONGRATULATIONS!';
-            // alert('YOU WIN, CONGRATULATIONS!');
-            // document.location.reload();
           }
         }
       }
@@ -172,15 +164,15 @@ function collisionDetection() {
 }
 
 function drawScore() {
-  context.font = '16px Arial';
-  context.fillStyle = '#2dd4bf';
-  context.fillText(`Score: ${score}`, 8, 20);
+  ctx.font = '16px Arial';
+  ctx.fillStyle = '#2dd4bf';
+  ctx.fillText(`Score: ${score}`, 8, 20);
 }
 
 function drawLives() {
-  context.font = '16px Arial';
-  context.fillStyle = '#2dd4bf';
-  context.fillText(`Lives: ${lives}`, canvas.width - 65, 20);
+  ctx.font = '16px Arial';
+  ctx.fillStyle = '#2dd4bf';
+  ctx.fillText(`Lives: ${lives}`, canvas.width - 65, 20);
 }
 
 draw();
