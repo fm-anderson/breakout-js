@@ -1,7 +1,7 @@
 const canvas = document.querySelector('#canvas');
 const ctx = canvas.getContext('2d');
 const caption = document.querySelector('.action__caption');
-const buttons = document.querySelectorAll('.action__button');
+const btnContainer = document.querySelectorAll('.action__container');
 const playAgain = document.querySelector('#play-again');
 const nextLevel = document.querySelector('#next-level');
 
@@ -95,6 +95,7 @@ function draw() {
       lives--;
       if (!lives) {
         caption.textContent = 'GAME OVER';
+        renderButtons(btnContainer);
       } else {
         x = canvas.width / 2;
         y = canvas.height - 30;
@@ -116,8 +117,8 @@ function draw() {
   }
 }
 
-document.addEventListener('keydown', keyDownHandler, false);
-document.addEventListener('keyup', keyUpHandler, false);
+document.addEventListener('keydown', handleKeyDown, false);
+document.addEventListener('keyup', handleKeyUp, false);
 document.addEventListener('mousemove', mouseMoveHandler, false);
 
 function mouseMoveHandler(e) {
@@ -127,7 +128,7 @@ function mouseMoveHandler(e) {
   }
 }
 
-function keyDownHandler(e) {
+function handleKeyDown(e) {
   if (e.key === 'Right' || e.key === 'ArrowRight') {
     rightPressed = true;
   } else if (e.key === 'Left' || e.key === 'ArrowLeft') {
@@ -135,12 +136,18 @@ function keyDownHandler(e) {
   }
 }
 
-function keyUpHandler(e) {
+function handleKeyUp(e) {
   if (e.key === 'Right' || e.key === 'ArrowRight') {
     rightPressed = false;
   } else if (e.key === 'Left' || e.key === 'ArrowLeft') {
     leftPressed = false;
   }
+}
+
+function renderButtons(btnArr) {
+  btnArr.forEach((button) => {
+    button.style.display = 'block';
+  });
 }
 
 function collisionDetection() {
@@ -159,6 +166,7 @@ function collisionDetection() {
           score++;
           if (score === brickRowCount * brickColumnCount) {
             caption.textContent = 'CONGRATULATIONS!';
+            renderButtons(btnContainer);
           }
         }
       }
