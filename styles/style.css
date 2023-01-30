@@ -19,11 +19,31 @@
   border-radius: 0.5rem;
 }
 
-.caption {
+.action__caption {
   color: #4b5563;
   text-align: center;
   font-weight: 700;
   font-size: 24px;
   font-family: Arial, Helvetica, sans-serif;
   margin-top: 3rem;
+}
+
+.action__button {
+  /* display: none; */
+  background-color: #4b5563;
+  border: 1px solid #6b7280;
+  border-radius: 0.5rem;
+  color: rgba(45, 212, 191, 0.8);
+  font-size: 16px;
+  font-weight: 600;
+  padding: 0.6rem 1.2rem;
+  text-align: center;
+  cursor: pointer;
+  margin: 0 10px;
+}
+
+.action__button:hover {
+  background-color: rgba(45, 212, 191, 0.8);
+  border: 1px solid #5eead4;
+  color: #4b5563;
 }

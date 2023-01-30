@@ -1,6 +1,9 @@
 const canvas = document.querySelector('#canvas');
 const ctx = canvas.getContext('2d');
-const caption = document.querySelector('.caption');
+const caption = document.querySelector('.action__caption');
+const buttons = document.querySelectorAll('.action__button');
+const playAgain = document.querySelector('#play-again');
+const nextLevel = document.querySelector('#next-level');
 
 // ball
 const ballRadius = 10;
