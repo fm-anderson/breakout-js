@@ -1,5 +1,6 @@
-const canvas = document.querySelector('#myCanvas');
-const ctx = canvas.getContext('2d');
+const canvas = document.querySelector('.canvas');
+const context = canvas.getContext('2d');
+const caption = document.querySelector('.caption');
 
 // ball
 const ballRadius = 10;
@@ -36,19 +37,24 @@ let score = 0;
 let lives = 3;
 
 function drawBall() {
-  ctx.beginPath();
-  ctx.arc(x, y, ballRadius, 0, Math.PI * 2);
-  ctx.fillStyle = '#0095DD';
-  ctx.fill();
-  ctx.closePath();
+  context.beginPath();
+  context.arc(x, y, ballRadius, 0, Math.PI * 2);
+  context.fillStyle = '#2dd4bf';
+  context.fill();
+  context.closePath();
 }
 
 function drawPaddle() {
-  ctx.beginPath();
-  ctx.rect(paddleX, canvas.height - paddleHeight, paddleWidth, paddleHeight);
-  ctx.fillStyle = '#0095DD';
-  ctx.fill();
-  ctx.closePath();
+  context.beginPath();
+  context.rect(
+    paddleX,
+    canvas.height - paddleHeight,
+    paddleWidth,
+    paddleHeight
+  );
+  context.fillStyle = '#2dd4bf';
+  context.fill();
+  context.closePath();
 }
 
 function drawBricks() {
@@ -59,18 +65,18 @@ function drawBricks() {
         const brickY = r * (brickHeight + brickPadding) + brickOffsetTop;
         bricks[c][r].x = brickX;
         bricks[c][r].y = brickY;
-        ctx.beginPath();
-        ctx.rect(brickX, brickY, brickWidth, brickHeight);
-        ctx.fillStyle = '#0095DD';
-        ctx.fill();
-        ctx.closePath();
+        context.beginPath();
+        context.rect(brickX, brickY, brickWidth, brickHeight);
+        context.fillStyle = '#2dd4bf';
+        context.fill();
+        context.closePath();
       }
     }
   }
 }
 
 function draw() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  context.clearRect(0, 0, canvas.width, canvas.height);
   drawBricks();
   drawBall();
   drawPaddle();
@@ -90,8 +96,9 @@ function draw() {
     } else {
       lives--;
       if (!lives) {
-        alert('GAME OVER');
-        document.location.reload();
+        // alert('GAME OVER');
+        caption.textContent = 'GAME OVER';
+        // document.location.reload();
       } else {
         x = canvas.width / 2;
         y = canvas.height - 30;
@@ -107,7 +114,9 @@ function draw() {
   } else if (leftPressed) {
     paddleX = Math.max(paddleX - 7, 0);
   }
-  requestAnimationFrame(draw);
+  if (lives >= 0) {
+    requestAnimationFrame(draw);
+  }
 }
 
 document.addEventListener('keydown', keyDownHandler, false);
@@ -152,8 +161,9 @@ function collisionDetection() {
           b.status = 0;
           score++;
           if (score === brickRowCount * brickColumnCount) {
-            alert('YOU WIN, CONGRATULATIONS!');
-            document.location.reload();
+            caption.textContent = 'CONGRATULATIONS!';
+            // alert('YOU WIN, CONGRATULATIONS!');
+            // document.location.reload();
           }
         }
       }
@@ -162,15 +172,15 @@ function collisionDetection() {
 }
 
 function drawScore() {
-  ctx.font = '16px Arial';
-  ctx.fillStyle = '#0095DD';
-  ctx.fillText(`Score: ${score}`, 8, 20);
+  context.font = '16px Arial';
+  context.fillStyle = '#2dd4bf';
+  context.fillText(`Score: ${score}`, 8, 20);
 }
 
 function drawLives() {
-  ctx.font = '16px Arial';
-  ctx.fillStyle = '#0095DD';
-  ctx.fillText(`Lives: ${lives}`, canvas.width - 65, 20);
+  context.font = '16px Arial';
+  context.fillStyle = '#2dd4bf';
+  context.fillText(`Lives: ${lives}`, canvas.width - 65, 20);
 }
 
 draw();
