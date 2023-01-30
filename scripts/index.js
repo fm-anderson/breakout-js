@@ -24,13 +24,13 @@ let rightPressed = false;
 let leftPressed = false;
 
 // bricks
-const brickRowCount = 4;
+const brickRowCount = 6;
 const brickColumnCount = 9;
-const brickWidth = 54.5;
-const brickHeight = 18;
+const brickWidth = 60;
+const brickHeight = 16;
 const brickPadding = 6;
 const brickOffsetTop = 30;
-const brickOffsetLeft = 30;
+const brickOffsetLeft = 6;
 const bricks = [];
 for (let c = 0; c < brickColumnCount; c++) {
   bricks[c] = [];
