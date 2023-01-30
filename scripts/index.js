@@ -1,9 +1,13 @@
 const canvas = document.querySelector('#canvas');
 const ctx = canvas.getContext('2d');
 const caption = document.querySelector('.action__caption');
-const btnContainer = document.querySelectorAll('.action__container');
+const btnContainer = document.querySelector('.action__container');
 const playAgain = document.querySelector('#play-again');
-const nextLevel = document.querySelector('#next-level');
+
+document.addEventListener('keydown', handleKeyDown, false);
+document.addEventListener('keyup', handleKeyUp, false);
+document.addEventListener('mousemove', mouseMoveHandler, false);
+playAgain.addEventListener('click', () => document.location.reload());
 
 // ball
 const ballRadius = 10;
@@ -20,11 +24,11 @@ let rightPressed = false;
 let leftPressed = false;
 
 // bricks
-const brickRowCount = 3;
-const brickColumnCount = 5;
-const brickWidth = 75;
-const brickHeight = 20;
-const brickPadding = 8;
+const brickRowCount = 4;
+const brickColumnCount = 9;
+const brickWidth = 54.5;
+const brickHeight = 18;
+const brickPadding = 6;
 const brickOffsetTop = 30;
 const brickOffsetLeft = 30;
 const bricks = [];
@@ -117,10 +121,6 @@ function draw() {
   }
 }
 
-document.addEventListener('keydown', handleKeyDown, false);
-document.addEventListener('keyup', handleKeyUp, false);
-document.addEventListener('mousemove', mouseMoveHandler, false);
-
 function mouseMoveHandler(e) {
   const relativeX = e.clientX - canvas.offsetLeft;
   if (relativeX > 0 && relativeX < canvas.width) {
@@ -144,10 +144,8 @@ function handleKeyUp(e) {
   }
 }
 
-function renderButtons(btnArr) {
-  btnArr.forEach((button) => {
-    button.style.display = 'block';
-  });
+function renderButtons(button) {
+  button.style.display = 'block';
 }
 
 function collisionDetection() {
