@@ -7,23 +7,60 @@ const playAgain = document.querySelector('#play-again');
 document.addEventListener('keydown', handleKeyDown, false);
 document.addEventListener('keyup', handleKeyUp, false);
 document.addEventListener('mousemove', mouseMoveHandler, false);
+document.addEventListener('mousemove', mouseMoveHandler, false);
 playAgain.addEventListener('click', () => document.location.reload());
 
-// ball
+// -------------- header -------------- //
+let score = 0;
+let lives = 3;
+let playingState = false;
+
+function drawScore() {
+  ctx.font = '16px Arial';
+  ctx.fillStyle = '#2dd4bf';
+  ctx.fillText(`Score: ${score}`, 8, 20);
+  if (playingState) {
+    caption.textContent = `Score: ${score}`;
+  }
+}
+
+function drawLives() {
+  ctx.font = '16px Arial';
+  ctx.fillStyle = '#2dd4bf';
+  ctx.fillText(`Lives: ${lives}`, canvas.width - 65, 20);
+}
+
+// -------------- ball -------------- //
 const ballRadius = 10;
 let x = canvas.width / 2;
 let y = canvas.height - 30;
-let dx = 2;
-let dy = -2;
+let dx = 4;
+let dy = -4;
 
-// paddle
+function drawBall() {
+  ctx.beginPath();
+  ctx.arc(x, y, ballRadius, 0, Math.PI * 2);
+  ctx.fillStyle = '#2ea999';
+  ctx.fill();
+  ctx.closePath();
+}
+
+// -------------- paddle -------------- //
 const paddleHeight = 10;
-const paddleWidth = 75;
+const paddleWidth = 120;
 let paddleX = (canvas.width - paddleWidth) / 2;
 let rightPressed = false;
 let leftPressed = false;
 
-// bricks
+function drawPaddle() {
+  ctx.beginPath();
+  ctx.rect(paddleX, canvas.height - paddleHeight, paddleWidth, paddleHeight);
+  ctx.fillStyle = '#2dd4bf';
+  ctx.fill();
+  ctx.closePath();
+}
+
+// -------------- bricks -------------- //
 const brickRowCount = 6;
 const brickColumnCount = 9;
 const brickWidth = 60;
@@ -37,26 +74,6 @@ for (let c = 0; c < brickColumnCount; c++) {
   for (let r = 0; r < brickRowCount; r++) {
     bricks[c][r] = { x: 0, y: 0, status: 1 };
   }
-}
-
-// header
-let score = 0;
-let lives = 3;
-
-function drawBall() {
-  ctx.beginPath();
-  ctx.arc(x, y, ballRadius, 0, Math.PI * 2);
-  ctx.fillStyle = '#2dd4bf';
-  ctx.fill();
-  ctx.closePath();
-}
-
-function drawPaddle() {
-  ctx.beginPath();
-  ctx.rect(paddleX, canvas.height - paddleHeight, paddleWidth, paddleHeight);
-  ctx.fillStyle = '#2dd4bf';
-  ctx.fill();
-  ctx.closePath();
 }
 
 function drawBricks() {
@@ -77,7 +94,33 @@ function drawBricks() {
   }
 }
 
+// -------------- game -------------- //
+function collisionDetection() {
+  for (let c = 0; c < brickColumnCount; c++) {
+    for (let r = 0; r < brickRowCount; r++) {
+      const b = bricks[c][r];
+      if (b.status === 1) {
+        if (
+          x > b.x &&
+          x < b.x + brickWidth &&
+          y > b.y &&
+          y < b.y + brickHeight
+        ) {
+          dy = -dy;
+          b.status = 0;
+          score++;
+          if (score === brickRowCount * brickColumnCount) {
+            caption.textContent = 'CONGRATULATIONS!';
+            renderButtons(btnContainer);
+          }
+        }
+      }
+    }
+  }
+}
+
 function draw() {
+  playingState = true;
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   drawBricks();
   drawBall();
@@ -103,8 +146,8 @@ function draw() {
       } else {
         x = canvas.width / 2;
         y = canvas.height - 30;
-        dx = 2;
-        dy = -2;
+        dx = 4;
+        dy = -4;
         paddleX = (canvas.width - paddleWidth) / 2;
       }
     }
@@ -121,6 +164,7 @@ function draw() {
   }
 }
 
+// -------------- utils -------------- //
 function mouseMoveHandler(e) {
   const relativeX = e.clientX - canvas.offsetLeft;
   if (relativeX > 0 && relativeX < canvas.width) {
@@ -133,6 +177,9 @@ function handleKeyDown(e) {
     rightPressed = true;
   } else if (e.key === 'Left' || e.key === 'ArrowLeft') {
     leftPressed = true;
+  } else if (e.key === ' ' && !playingState) {
+    caption.textContent = `Score: ${score}`;
+    draw();
   }
 }
 
@@ -148,40 +195,8 @@ function renderButtons(button) {
   button.style.display = 'block';
 }
 
-function collisionDetection() {
-  for (let c = 0; c < brickColumnCount; c++) {
-    for (let r = 0; r < brickRowCount; r++) {
-      const b = bricks[c][r];
-      if (b.status === 1) {
-        if (
-          x > b.x &&
-          x < b.x + brickWidth &&
-          y > b.y &&
-          y < b.y + brickHeight
-        ) {
-          dy = -dy;
-          b.status = 0;
-          score++;
-          if (score === brickRowCount * brickColumnCount) {
-            caption.textContent = 'CONGRATULATIONS!';
-            renderButtons(btnContainer);
-          }
-        }
-      }
-    }
-  }
-}
-
-function drawScore() {
-  ctx.font = '16px Arial';
-  ctx.fillStyle = '#2dd4bf';
-  ctx.fillText(`Score: ${score}`, 8, 20);
-}
-
-function drawLives() {
-  ctx.font = '16px Arial';
-  ctx.fillStyle = '#2dd4bf';
-  ctx.fillText(`Lives: ${lives}`, canvas.width - 65, 20);
-}
-
-draw();
+drawBricks();
+drawBall();
+drawPaddle();
+drawScore();
+drawLives();
